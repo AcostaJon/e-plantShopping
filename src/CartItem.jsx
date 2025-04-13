@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeItem, updateQuantity } from './CartSlice';
+import { removeItem, updateQuantity, addItem } from './CartSlice';
 import './CartItem.css';
 
-const CartItem = ({ onContinueShopping }) => {
+const CartItem = ({ onContinueShopping, updateAddedToCart }) => {
   const cart = useSelector(state => state.cart.items);
   const dispatch = useDispatch();
 
@@ -28,15 +28,15 @@ const CartItem = ({ onContinueShopping }) => {
 
   const handleIncrement = (item) => {
     dispatch(updateQuantity({ name: item.name, quantity: item.quantity + 1 }));
+   
   };
 
-  const handleDecrement = (item) => {
+  const handleDecrement = (item, e) => {
     if (item.quantity >= 1) {
       dispatch(updateQuantity({ name: item.name, quantity: item.quantity - 1 }));
-    } else if (item.quantity <= 0) {
+    }  else if(item.quantity == 0) {
       dispatch(removeItem(item.name))
-    }
-
+    } 
   }
 
   const handleRemove = (item) => {
@@ -64,7 +64,7 @@ const CartItem = ({ onContinueShopping }) => {
               <div className="cart-item-name">{item.name}</div>
               <div className="cart-item-cost">{item.cost}</div>
               <div className="cart-item-quantity">
-                <button className="cart-item-button cart-item-button-dec" onClick={() => handleDecrement(item)}>-</button>
+                <button className="cart-item-button cart-item-button-dec" onClick={(e) => handleDecrement(item,e)}>-</button>
                 <span className="cart-item-quantity-value">{item.quantity}</span>
                 <button className="cart-item-button cart-item-button-inc" onClick={() => handleIncrement(item)}>+</button>
               </div>
